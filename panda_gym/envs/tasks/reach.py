@@ -29,7 +29,7 @@ class Reach(Task):
         self.sim.create_table(length=1.1, width=0.7, height=0.4, x_offset=-0.3)
         self.sim.create_sphere(
             body_name="target",
-            radius=0.05,
+            radius=0.03,
             mass=0.0,
             ghost=True,
             position=np.zeros(3),
