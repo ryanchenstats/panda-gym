@@ -223,6 +223,7 @@ class RobotTaskEnv(gym.Env):
         render_yaw: float = 45,
         render_pitch: float = -30,
         render_roll: float = 0,
+        render_dual_vision: bool = False
     ) -> None:
         assert robot.sim == task.sim, "The robot and the task must belong to the same simulation."
         self.sim = robot.sim
@@ -254,6 +255,7 @@ class RobotTaskEnv(gym.Env):
         self.render_yaw = render_yaw
         self.render_pitch = render_pitch
         self.render_roll = render_roll
+        self.render_dual_vision = render_dual_vision
         with self.sim.no_rendering():
             self.sim.place_visualizer(
                 target_position=self.render_target_position,
@@ -335,7 +337,8 @@ class RobotTaskEnv(gym.Env):
         Returns:
             RGB np.ndarray or None: An RGB array if mode is 'rgb_array', else None.
         """
-        return self.sim.render(
+        if self.render_dual_vision:
+            img1 = self.sim.render(
             width=self.render_width,
             height=self.render_height,
             target_position=self.render_target_position,
@@ -343,4 +346,25 @@ class RobotTaskEnv(gym.Env):
             yaw=self.render_yaw,
             pitch=self.render_pitch,
             roll=self.render_roll,
-        )
+            )
+            img2 = self.sim.render(
+                width=self.render_width,
+                height=self.render_height,
+                target_position=self.render_target_position,
+                distance=self.render_distance,
+                yaw=self.render_yaw + 90,
+                pitch=self.render_pitch,
+                roll=self.render_roll,
+            )
+
+            return img1, img2
+        else:
+            return self.sim.render(
+                width=self.render_width,
+                height=self.render_height,
+                target_position=self.render_target_position,
+                distance=self.render_distance,
+                yaw=self.render_yaw,
+                pitch=self.render_pitch,
+                roll=self.render_roll,
+            )
