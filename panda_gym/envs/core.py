@@ -352,7 +352,7 @@ class RobotTaskEnv(gym.Env):
                 height=self.render_height,
                 target_position=self.render_target_position,
                 distance=self.render_distance,
-                yaw=180-self.render_yaw,
+                yaw=-self.render_yaw,
                 pitch=self.render_pitch,
                 roll=self.render_roll,
             )
